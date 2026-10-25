@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbf6f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#241c20" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Father">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}html{-webkit-text-size-adjust:100%}</style>
+<title>Expectant Father Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: a natal tracker. Soft gradient hero, a daily read, tinted rounded cards in one column, a pill tab bar. */
+:root{
+  --bg:#fbf6f2;            /* warm cream */
+  --surface:#ffffff;
+  --fg:#4a3a3c;            /* warm brown ink */
+  --muted:#8e7c7e;
+  --line:#efe3df;
+  --blush:#f8dcd8;         /* her */
+  --lavender:#e9e0f6;      /* baby */
+  --mint:#dcefe6;          /* you */
+  --butter:#fdf0d5;        /* to do */
+  --rose:#d9847f;          /* primary action */
+  --rose-deep:#b8615c;
+  --sage:#6f9e8d;
+  --plum:#7b6b9c;
+  --warn-soft:#fde3df;
+  --warn:#b4514b;
+  --shadow:0 6px 20px rgba(120,80,80,.08);
+  --display:"Quicksand", "Nunito", -apple-system, "Segoe UI", sans-serif;
+  --body:"Nunito", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#241c20; --surface:#2f262b; --fg:#f3e8e6; --muted:#b39c9e; --line:#43373c;
+    --blush:#4a3237; --lavender:#3b3348; --mint:#2d3f39; --butter:#46392a;
+    --rose:#e49a94; --rose-deep:#f0b3ad; --sage:#8fbfae; --plum:#b2a3d4;
+    --warn-soft:#4a2c2c; --warn:#f0a39d; --shadow:0 6px 20px rgba(0,0,0,.25); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#241c20; --surface:#2f262b; --fg:#f3e8e6; --muted:#b39c9e; --line:#43373c;
+  --blush:#4a3237; --lavender:#3b3348; --mint:#2d3f39; --butter:#46392a;
+  --rose:#e49a94; --rose-deep:#f0b3ad; --sage:#8fbfae; --plum:#b2a3d4;
+  --warn-soft:#4a2c2c; --warn:#f0a39d; --shadow:0 6px 20px rgba(0,0,0,.25); color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 120px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.2;text-wrap:balance;margin:0}
+h1{font-size:2.1rem}
+h2{font-size:1.45rem}
+h3{font-size:1.1rem}
+p{margin:0}
+a{color:var(--rose-deep)}
+.eyebrow{font-family:var(--display);font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+.screen{display:flex;flex-direction:column;gap:18px}
+.stack{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.between{justify-content:space-between}
+.card{background:var(--surface);border-radius:22px;padding:18px;box-shadow:var(--shadow);min-width:0}
+.tint{border-radius:22px;padding:18px;min-width:0}
+.tint.blush{background:var(--blush)}
+.tint.lavender{background:var(--lavender)}
+.tint.mint{background:var(--mint)}
+.tint.butter{background:var(--butter)}
+/* hero */
+.hero{border-radius:28px;padding:22px 20px 18px;background:linear-gradient(135deg,var(--blush) 0%,var(--lavender) 60%,var(--mint) 100%);display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;box-shadow:var(--shadow)}
+.hero .big{font-family:var(--display);font-size:3.4rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.hero .big small{font-size:1.1rem;font-weight:600;color:var(--muted);margin-left:4px}
+.hero .sub{font-weight:600}
+.fruit{width:112px;height:112px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;box-shadow:var(--shadow);padding:8px}
+.fruit svg{width:44px;height:44px}
+.fruit .name{font-family:var(--display);font-weight:700;font-size:.85rem;line-height:1.1}
+.fruit .dim{font-size:.68rem;color:var(--muted);line-height:1.1}
+@media (max-width:380px){.hero{grid-template-columns:1fr}.fruit{width:96px;height:96px}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--surface);border-radius:18px;padding:12px 10px;text-align:center;box-shadow:var(--shadow)}
+.stat .n{font-family:var(--display);font-size:1.5rem;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat .l{font-size:.72rem;color:var(--muted);font-weight:600}
+.ring{height:10px;background:var(--surface);border-radius:5px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
+.ring i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--rose),var(--plum))}
+/* daily read */
+.read{background:var(--surface);border-radius:22px;padding:18px;box-shadow:var(--shadow);border:2px solid var(--lavender)}
+.read .tag{display:inline-flex;align-items:center;gap:6px;background:var(--lavender);color:var(--plum);font-family:var(--display);font-weight:700;font-size:.74rem;padding:4px 10px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase}
+.read h3{margin-top:10px;font-size:1.2rem}
+.read p{margin-top:6px}
+.btn{font-family:var(--display);font-weight:700;font-size:.9rem;padding:10px 16px;border-radius:999px;border:0;background:var(--rose);color:#fff;cursor:pointer;box-shadow:var(--shadow)}
+.btn.ghost{background:var(--surface);color:var(--rose-deep);border:2px solid var(--blush);box-shadow:none}
+.btn.small{padding:7px 12px;font-size:.8rem}
+.btn[aria-pressed="true"]{background:var(--sage);color:#fff;border-color:transparent}
+ul{margin:0;padding-left:1.15em}
+li{margin:5px 0}
+.check{list-style:none;padding:0;display:flex;flex-direction:column;gap:4px}
+.check li{margin:0}
+.check label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;padding:7px 0}
+.check input{appearance:none;-webkit-appearance:none;margin:3px 0 0;width:22px;height:22px;flex:0 0 auto;border-radius:50%;border:2px solid var(--rose);background:var(--surface);position:relative;cursor:pointer}
+.check input:checked{background:var(--rose);border-color:var(--rose)}
+.check input:checked::after{content:"";position:absolute;left:6px;top:2px;width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.pill{display:inline-block;font-family:var(--display);font-size:.72rem;font-weight:700;letter-spacing:.04em;padding:3px 10px;border-radius:999px;background:var(--mint);color:var(--sage)}
+.pill.now{background:var(--rose);color:#fff}
+.pill.past{background:var(--line);color:var(--muted)}
+details{background:var(--surface);border-radius:22px;box-shadow:var(--shadow);min-width:0}
+details.now{outline:2px solid var(--rose)}
+summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;gap:12px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary .t{flex:1;min-width:0}
+summary .chev{color:var(--muted);transition:transform .2s;font-size:1.3rem}
+details[open] summary .chev{transform:rotate(90deg)}
+details .body{padding:0 18px 18px;display:flex;flex-direction:column;gap:12px}
+.facets{display:grid;grid-template-columns:1fr;gap:10px}
+.facet{border-radius:18px;padding:14px 16px;min-width:0}
+.facet .eyebrow{display:block;margin-bottom:4px}
+.facet.her{background:var(--blush)}
+.facet.her .eyebrow{color:var(--rose-deep)}
+.facet.baby{background:var(--lavender)}
+.facet.baby .eyebrow{color:var(--plum)}
+.facet.you{background:var(--mint)}
+.facet.you .eyebrow{color:var(--sage)}
+.facet.do{background:var(--butter)}
+.facet.do .eyebrow{color:#9a6a1f}
+:root[data-theme="dark"] .facet.do .eyebrow{color:#e9c58a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .facet.do .eyebrow{color:#e9c58a}}
+.keydates{display:flex;flex-direction:column}
+.kd{display:grid;grid-template-columns:5.5em 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--line);align-items:start}
+.kd:first-child{border-top:0}
+.kd .d{font-family:var(--display);font-variant-numeric:tabular-nums;font-weight:700;font-size:.9rem;line-height:1.2}
+.kd .d span{display:block;font-family:var(--body);font-weight:600;font-size:.72rem;color:var(--muted)}
+.kd.past{opacity:.55}
+.kd.next .d{color:var(--rose-deep)}
+.callout{border-radius:18px;background:var(--warn-soft);padding:14px 16px;color:var(--fg)}
+.callout strong{color:var(--warn)}
+.callout.soft{background:var(--mint)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:8px 10px 8px 0;border-top:1px solid var(--line)}
+th{font-family:var(--display);font-weight:700;border-top:0}
+.tablewrap{overflow-x:auto}
+.lesson-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.lesson{border-radius:18px;padding:14px 16px;background:var(--surface);box-shadow:var(--shadow)}
+.lesson .when{font-family:var(--display);color:var(--plum);font-weight:700;font-size:.78rem;letter-spacing:.03em;text-transform:uppercase}
+.lesson h3{margin-top:2px}
+.library{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:380px){.library{grid-template-columns:1fr}}
+.libcard{border:0;text-align:left;font:inherit;color:var(--fg);border-radius:22px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-height:118px;box-shadow:var(--shadow)}
+.libcard h3{font-size:1.05rem}
+.libcard .n{font-size:.78rem;color:var(--muted);font-weight:600}
+.libcard[aria-pressed="true"]{outline:3px solid var(--rose)}
+.libcard .done{font-family:var(--display);font-size:.72rem;font-weight:700;color:var(--sage)}
+textarea,input[type="date"],input[type="text"]{width:100%;border:2px solid var(--line);border-radius:14px;padding:10px 12px;font:inherit;font-size:.95rem;background:var(--surface);color:var(--fg)}
+textarea{min-height:64px;resize:vertical}
+textarea:focus,input:focus,button:focus-visible{outline:3px solid var(--lavender);outline-offset:1px}
+.steps{counter-reset:s;list-style:none;padding:0;display:flex;flex-direction:column;gap:8px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2.2em 1fr;gap:8px;align-items:start;margin:0}
+.steps li::before{content:counter(s);font-family:var(--display);font-weight:700;width:1.8em;height:1.8em;border-radius:50%;background:var(--lavender);color:var(--plum);display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.appts{display:flex;flex-direction:column;gap:6px}
+.appt{display:grid;grid-template-columns:5.5em 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.appt:first-child{border-top:0}
+.appt .d{font-family:var(--display);font-weight:700;font-size:.9rem}
+.appt .x{background:none;border:0;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px 8px}
+.apptform{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
+@media (max-width:460px){.apptform{grid-template-columns:1fr 1fr}.apptform .btn{grid-column:1 / -1}}
+.duedate{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center}
+@media (max-width:460px){.duedate{grid-template-columns:1fr 1fr}.duedate input{grid-column:1 / -1}}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));pointer-events:none}
+nav.tabs .in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-radius:999px;padding:6px;box-shadow:0 10px 30px rgba(90,60,60,.18);pointer-events:auto}
+nav.tabs button{font-family:var(--display);font-size:.72rem;font-weight:700;background:none;border:0;color:var(--muted);padding:8px 4px 6px;border-radius:999px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blush)}
+.hidden{display:none}
+@media (prefers-reduced-motion: reduce){*{transition:none !important}}
+</style>
+
+<div class="wrap">
+
+  <!-- TODAY -->
+  <section id="screen-today" class="screen" aria-labelledby="today-h">
+    <div class="row between">
+      <div><span class="eyebrow">For the father</span><h2 id="today-h" style="font-size:1.2rem" data-date></h2></div>
+      <span class="pill now" id="tri-pill"></span>
+    </div>
+
+    <div class="hero">
+      <div>
+        <div class="big"><span id="h-week"></span><small id="h-day"></small></div>
+        <p class="sub" id="h-month"></p>
+        <p class="small muted" id="h-due"></p>
+      </div>
+      <div class="fruit" id="fruit"></div>
+    </div>
+
+    <div class="stack" style="gap:6px">
+      <div class="ring"><i id="progress" style="width:0%"></i></div>
+      <div class="row between small muted"><span>Last period</span><span id="p-pct"></span><span>Due</span></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n" id="s-days"></div><div class="l">days to go</div></div>
+      <div class="stat"><div class="n" id="s-weeks"></div><div class="l">weeks left</div></div>
+      <div class="stat"><div class="n" id="s-read"></div><div class="l">reads done</div></div>
+    </div>
+
+    <div class="read">
+      <span class="tag">Today's read</span>
+      <h3 id="read-title"></h3>
+      <p id="read-body"></p>
+      <div class="row" style="margin-top:12px">
+        <button type="button" class="btn small" id="read-done">Mark as read</button>
+        <button type="button" class="btn small ghost" id="read-next">Another one</button>
+      </div>
+    </div>
+
+    <div class="stack" style="gap:8px">
+      <h2 id="month-title"></h2>
+      <p class="muted small" id="month-label"></p>
+    </div>
+    <div class="facets" id="today-facets"></div>
+
+    <div class="tint butter stack">
+      <span class="eyebrow" style="color:#9a6a1f">For you to do this month</span>
+      <ul class="check" id="today-check"></ul>
+    </div>
+
+    <div class="card stack">
+      <div class="row between"><h3>Appointments</h3><span class="small muted">saved on this phone</span></div>
+      <div class="appts" id="appts"></div>
+      <div class="apptform">
+        <label class="small muted" style="display:flex;flex-direction:column;gap:4px">Date<input type="date" id="appt-date"></label>
+        <label class="small muted" style="display:flex;flex-direction:column;gap:4px">What<input type="text" id="appt-label" placeholder="Scan, bloods, clinic"></label>
+        <button type="button" class="btn small" id="appt-add">Add</button>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>Key dates</h3>
+      <div class="keydates" id="keydates"></div>
+      <p class="small muted">Counted in completed weeks from the first day of her last period, the way doctors count. Only about one baby in twenty arrives on the due date.</p>
+    </div>
+
+    <div class="card stack">
+      <h3>Adjust the due date</h3>
+      <p class="small muted">The first scan usually moves it by a few days. Enter the doctor's date and everything here shifts to match.</p>
+      <div class="duedate">
+        <input type="date" id="due-input" aria-label="Due date">
+        <button type="button" class="btn small" id="due-save">Save</button>
+        <button type="button" class="btn small ghost" id="due-reset">Reset</button>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Call the doctor the same day</strong> for bleeding, sharp or severe abdominal pain, severe headache or blurred vision, fever, waters breaking early, or the baby moving noticeably less. This is general guidance. The book has no danger-sign list, so ask for the hospital's own and note it on the Ask screen.
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section id="screen-timeline" class="screen hidden" aria-labelledby="timeline-h">
+    <div class="stack" style="gap:4px">
+      <span class="eyebrow">The journey</span>
+      <h2 id="timeline-h">Nine months, then birth, then home</h2>
+      <p class="muted small">Tap a month. Each has what she is going through, what the baby is doing, what you are likely to feel, and what to do. Ticks are kept on this phone.</p>
+    </div>
+    <div class="stack" id="timeline"></div>
+  </section>
+
+  <!-- LEARN -->
+  <section id="screen-learn" class="screen hidden" aria-labelledby="learn-h">
+    <div class="stack" style="gap:4px">
+      <span class="eyebrow">Learn</span>
+      <h2 id="learn-h">Four lessons for the father</h2>
+      <p class="muted small" id="learn-progress"></p>
+    </div>
+    <div class="library" id="learn-nav">
+      <button type="button" class="libcard tint mint" data-lesson="feelings" aria-pressed="true"><span class="n">Lesson 1</span><h3>Your feelings, month by month</h3><span class="done" data-done="feelings"></span></button>
+      <button type="button" class="libcard tint blush" data-lesson="her" aria-pressed="false"><span class="n">Lesson 2</span><h3>Looking after her</h3><span class="done" data-done="her"></span></button>
+      <button type="button" class="libcard tint lavender" data-lesson="labour" aria-pressed="false"><span class="n">Lesson 3</span><h3>Labour and birth</h3><span class="done" data-done="labour"></span></button>
+      <button type="button" class="libcard tint butter" data-lesson="home" aria-pressed="false"><span class="n">Lesson 4</span><h3>The first weeks home</h3><span class="done" data-done="home"></span></button>
+    </div>
+
+    <div id="lesson-feelings" class="stack lesson-pane">
+      <div class="callout soft">The book's central idea: you run about a trimester behind her. She feels pregnant from the start. For you it becomes real in steps, the heartbeat, the scan, the first kick, and for many men only on meeting the baby. Nearly every feeling on this list is normal, and saying it out loud works better than hiding it.</div>
+      <div class="lesson-grid" id="feelings-grid"></div>
+      <div class="card stack">
+        <h3>What to do with the feelings</h3>
+        <ul>
+          <li><strong>Say them.</strong> Hiding worries to protect her backfires and raises stress for both of you.</li>
+          <li><strong>Fifteen minutes a day about anything except the baby.</strong> Most couples see communication drop in the first year after a birth, and many never recover it.</li>
+          <li><strong>Talk to other fathers.</strong> The book comes back to this in almost every chapter.</li>
+          <li><strong>Take some time for yourself</strong>, and tell her where you are going.</li>
+          <li><strong>When she needs reassurance</strong>, "everything will be fine" is the wrong answer. Tell her what is on your mind and that you are still here.</li>
+        </ul>
+      </div>
+      <div class="tint mint stack">
+        <h3>Five things that predict a more involved father</h3>
+        <p class="small muted">Correlational, but the advice holds.</p>
+        <ul class="check" id="involve-check"></ul>
+      </div>
+      <div class="card stack">
+        <h3>Sex across the pregnancy</h3>
+        <ul>
+          <li>Desire can rise or fall, in either of you. Both are normal.</li>
+          <li>In a normal pregnancy sex is safe throughout. The baby is cushioned by fluid. Ask the doctor first if there is any risk of early labour or a low-lying placenta.</li>
+          <li>Each of you tends to underestimate how attractive the other finds you. Talk about it. Offer affection without pressure. Never criticise her body, even as a joke.</li>
+          <li>Late in pregnancy desire usually drops, mostly from discomfort and worry.</li>
+        </ul>
+      </div>
+      <button type="button" class="btn lesson-done" data-lesson="feelings">Mark lesson 1 as read</button>
+    </div>
+
+    <div id="lesson-her" class="stack lesson-pane hidden">
+      <div class="tint blush stack">
+        <h3>Morning sickness, what you can do</h3>
+        <p class="small muted">Affects most women. Usually starts 4 to 6 weeks after conception and eases by 14 to 15 weeks, roughly late October to mid December for this pregnancy.</p>
+        <ul>
+          <li>Keep her drinking. A water bottle by the bed.</li>
+          <li>Small meals every 2 to 3 hours, before the nausea starts. Low blood sugar makes it worse. Crackers by the bed for the morning.</li>
+          <li>Keep strong smells away, especially fatty or spicy cooking.</li>
+          <li>Take over the cooking and the shopping. Learn a few 10 to 30 minute meals.</li>
+          <li>Ginger, vitamin B6 and acupressure wrist bands help some women. Clear each with her doctor first.</li>
+          <li>If the prenatal vitamins make it worse, ask about taking them with food or switching type.</li>
+          <li>Don't nag about food. Eat as well as she does, in solidarity.</li>
+          <li>No nausea is not a warning sign. Nausea that has not eased by 14 to 15 weeks, or weight loss, means call the doctor.</li>
+        </ul>
+      </div>
+      <div class="card stack">
+        <h3>The rules for the first trimester</h3>
+        <ul>
+          <li><strong>Folic acid daily.</strong> The main window for organ development runs to about mid November.</li>
+          <li>No alcohol, smoking, vaping or recreational drugs. Caffeine kept low.</li>
+          <li>No medicine, prescription or over the counter, without checking with her doctor.</li>
+          <li>Nothing raw or undercooked, no unpasteurised dairy or soft cheese. The book's high-mercury fish list is American, so which local fish are safe is a question for the doctor.</li>
+          <li>Nothing that pushes her temperature above 39°C, especially in the first 6 to 8 weeks. Worth remembering in this climate.</li>
+          <li>Keep exercising if her doctor agrees. Swimming, walking and snorkelling are fine. No scuba, no contact sports, nothing with a risk of falling.</li>
+          <li>Don't panic about anything she did before she knew.</li>
+          <li><strong>Your side:</strong> stop smoking if you smoke, and take over cat litter, garden chemicals and pesticides.</li>
+        </ul>
+        <div class="callout small">The book gives her vitamin D target as 600 mcg. That is a unit error. The usual figure is 600 IU, about 15 mcg. Take the doctor's numbers, not the book's.</div>
+      </div>
+      <div class="card stack">
+        <h3>At the appointments</h3>
+        <ul>
+          <li>Go to as many as you can. It makes the pregnancy real, shows her she is not doing this alone, and staff take you more seriously.</li>
+          <li>Tell the doctor from the start that you want to be involved, and ask questions at every visit.</li>
+          <li>Choosing the doctor and place of birth: ask about their attitude to fathers in the room, their view on C-sections and induction, who covers when they are away, and the after-hours line. She gets at least 51 percent of the vote.</li>
+          <li>Decide before results arrive what you would want to know from screening. If she is 35 or over, more screening is usually offered. That is routine.</li>
+          <li>Visits are usually monthly to about month 6, then every two weeks, then weekly in the last month.</li>
+        </ul>
+      </div>
+      <div class="card stack">
+        <h3>Ways to show her you care</h3>
+        <p class="small muted">The book runs to a hundred. These are the ones that transfer anywhere.</p>
+        <ul>
+          <li>Unprompted chores. Back rubs and foot rubs.</li>
+          <li>Learn a few recipes she likes.</li>
+          <li>Never comment on her weight.</li>
+          <li>Go to every appointment you can, and say in advance that you are coming.</li>
+          <li>Buy something for the baby together.</li>
+          <li>Take a belly photo every month.</li>
+          <li>Set ground rules with relatives about advice and visits, and be the one who enforces them.</li>
+        </ul>
+      </div>
+      <div class="card stack">
+        <h3>If something goes wrong</h3>
+        <ul>
+          <li>Miscarriage is common, a fifth to a third of pregnancies, mostly in the first three months. More than nine in ten couples who have one go on to a healthy baby.</li>
+          <li>Your grief is real. Men often grieve quietly and nobody asks how they are.</li>
+          <li>What helps her: take the initiative, listen, don't try to fix it. Never say "we can always have another one".</li>
+          <li>Bleeding, or sharp one-sided pain low in the abdomen, needs to be seen the same day.</li>
+        </ul>
+      </div>
+      <button type="button" class="btn lesson-done" data-lesson="her">Mark lesson 2 as read</button>
+    </div>
+
+    <div id="lesson-labour" class="stack lesson-pane hidden">
+      <div class="callout soft">Full term for this pregnancy starts around <strong id="fullterm-inline"></strong>. Whether you will be allowed in the delivery room and in theatre here, and what pain relief is on offer, are questions on the Ask screen.</div>
+      <div class="card stack">
+        <h3>Before it starts</h3>
+        <ul>
+          <li>Agree her stance on pain relief well ahead, and a code word that means "I really want the drugs now". She gets the 51 percent. She should not be making big decisions mid-labour.</li>
+          <li>Decide your part in advance: cutting the cord, holding the baby first, what happens if there is a C-section.</li>
+          <li>Keep the birth plan short and flexible. Ask the doctor whether they want it written.</li>
+          <li>Bags packed and transport sorted by month 8.</li>
+          <li>Call the doctor before you leave for the hospital. Their instruction outranks her wish to stay home longer.</li>
+        </ul>
+      </div>
+      <div class="tint lavender stack">
+        <h3>Real labour or false</h3>
+        <div class="tablewrap"><table>
+          <tr><th>False</th><th>Real</th></tr>
+          <tr><td>Irregular contractions</td><td>Regular, and getting longer, stronger and closer together</td></tr>
+          <tr><td>Stops or changes when she moves</td><td>Continues whatever she does</td></tr>
+          <tr><td>Little or no discharge</td><td>Blood-tinged discharge, and the waters may break</td></tr>
+          <tr><td>Pain mostly in the front</td><td>Pain often in the lower back</td></tr>
+        </table></div>
+      </div>
+      <div class="card stack">
+        <h3>The stages and your job in each</h3>
+        <p class="small muted">The book's timings are older figures. Modern guidance accepts longer labours, so none of these are deadlines.</p>
+        <div class="tablewrap"><table>
+          <tr><th>Stage</th><th>What is happening</th><th>You</th></tr>
+          <tr><td><strong>Early</strong><br><span class="muted">often many hours</span></td><td>Mild contractions, well apart</td><td>Time them on paper, length and gap. Light food and water for her if allowed. You eat, drink and rest too. Check bags, phone, keys.</td></tr>
+          <tr><td><strong>Active</strong><br><span class="muted">about 3 to 5 hours</span></td><td>Every 2 to 3 minutes, she can't talk through them</td><td>Go to the hospital. Find the shower, call button, ice and blankets. Tell the nurses you want to be involved. Ice chips, massage, pressure on her lower back, short praise. Slow breathing, loose jaw and shoulders, upright and moving between contractions, pee every hour.</td></tr>
+          <tr><td><strong>Transition</strong><br><span class="muted">1 to 2 hours, the hardest</span></td><td>Long contractions close together. She may shake, vomit, want drugs, and be rude to you</td><td>Do what she says, fast. Take none of it personally.</td></tr>
+          <tr><td><strong>Pushing</strong><br><span class="muted">up to about 2 hours</span></td><td>Staff take over</td><td>Stay close, at her head, not behind a camera. She can feel abandoned otherwise.</td></tr>
+          <tr><td><strong>Placenta</strong></td><td>20 minutes to an hour after</td><td>Stay with her. Then the baby on her chest, skin to skin.</td></tr>
+        </table></div>
+      </div>
+      <div class="card stack">
+        <h3>If it is a C-section</h3>
+        <ul>
+          <li>Ask early what the hospital allows for fathers in theatre, and about skin-to-skin contact.</li>
+          <li>Sit at her head. Fathers do sometimes faint. Tell her what is happening with the baby.</li>
+          <li>Go with the baby if they take it to the nursery, and offer skin-to-skin on your chest.</li>
+          <li>Afterwards, tell her she did not fail. Many women feel a C-section as failure, and unchecked that can feed postpartum depression.</li>
+          <li>Never suggest a C-section yourself. Let the doctor raise it.</li>
+          <li>Recovery takes weeks: no lifting, no stairs, no driving for a while. Covering that is your job.</li>
+          <li>Fear that she will die is one of fathers' commonest fears. A frightening birth can leave you with post-traumatic stress, and men rarely ask for help. Ask.</li>
+        </ul>
+      </div>
+      <div class="card stack">
+        <h3>If the baby comes before you can get there</h3>
+        <p class="small muted">A bigger risk on an island than in the book's settings. Follow the emergency operator over anything here.</p>
+        <ol class="steps">
+          <li>Call emergency services first.</li>
+          <li>Keep her sheltered, with a pillow under her hips.</li>
+          <li>Don't pull the baby's head. Support it. If the cord is around the neck, slide it gently over the head. Clear mucus from the mouth and nose.</li>
+          <li>Support the body as it comes. Don't slap the baby.</li>
+          <li>Baby on her chest, skin to skin, and let it nurse if it will. That helps the uterus contract. Dry and cover them both.</li>
+          <li>Tie the cord 8 to 10 cm from the baby. Don't cut it unless the operator says to.</li>
+          <li>Don't pull on the cord for the placenta. It comes 5 to 30 minutes later. Keep it in a bag for the doctor.</li>
+          <li>Massage her lower belly after the placenta to limit bleeding.</li>
+        </ol>
+        <p class="small muted">Kit: waterproof pads or newspaper, non-latex gloves, a suction bulb, a cord clamp or clean string, a sealable bag, clean scissors, towels.</p>
+      </div>
+      <button type="button" class="btn lesson-done" data-lesson="labour">Mark lesson 3 as read</button>
+    </div>
+
+    <div id="lesson-home" class="stack lesson-pane hidden">
+      <div class="callout soft">Roughly mid June to late July 2027. The book gives no list of newborn danger signs and none for her recovery, such as heavy bleeding, fever or wound problems. Get that list from the hospital before you leave it.</div>
+      <div class="tint blush stack">
+        <h3>Her recovery</h3>
+        <ul>
+          <li>Bleeding goes from red to pink to brown to yellow over about six weeks.</li>
+          <li>Soreness from stitches or a C-section wound fades over about six weeks.</li>
+          <li>Breasts swell and harden from about day 3, nipples sore for about two weeks.</li>
+          <li>Exhaustion, constipation, sweating, hair loss for some months, mixed feelings, and grief at no longer being the centre of attention are all common.</li>
+          <li>Sex: doctors usually say wait 4 to 6 weeks. Low desire after that is mostly tiredness, not her body.</li>
+        </ul>
+      </div>
+      <div class="card stack">
+        <h3>Her mood: blues, depression, psychosis</h3>
+        <div class="tablewrap"><table>
+          <tr><th></th><th>How common</th><th>Looks like</th><th>Do</th></tr>
+          <tr><td><strong>Baby blues</strong></td><td>up to 80 percent</td><td>Starts day 1 or 2, gone within a few weeks</td><td>Support, sleep, patience</td></tr>
+          <tr><td><strong>Postpartum depression</strong></td><td>10 to 20 percent</td><td>Blues lasting past two weeks, or low mood at 1 to 2 months. Guilt, no pleasure, extreme worry or no interest in the baby, thoughts of harm</td><td>Get her to a doctor. Take her yourself if she resists</td></tr>
+          <tr><td><strong>Postpartum psychosis</strong></td><td>1 to 2 in 1,000</td><td>Wild mood swings, hallucinations, confusion, threats to herself or the baby</td><td><strong>Urgent.</strong> Get help at once</td></tr>
+        </table></div>
+        <ul>
+          <li>Take the night shifts so she gets at least five hours of unbroken sleep.</li>
+          <li>Tell her it is not her fault.</li>
+          <li>Keep a quiet note of her mood day to day, so you can tell blues from depression.</li>
+        </ul>
+      </div>
+      <div class="tint lavender stack">
+        <h3>Safe sleep</h3>
+        <ul>
+          <li>On the back, every time.</li>
+          <li>A firm, flat mattress and nothing else in the cot. No pillows, bumpers or loose bedding.</li>
+          <li>In your room, not your bed, for at least the first six months.</li>
+          <li>No smoking anywhere near the baby. No talc.</li>
+          <li>Dress the baby like you, plus a hat. Don't overdress.</li>
+        </ul>
+      </div>
+      <div class="tint mint stack">
+        <h3>You</h3>
+        <ul>
+          <li>You will probably feel pushed out at some point. Nearly every father in one large study did. Build your own relationship through everything that isn't feeding: bathing, changing, carrying, walking. Start in hospital.</li>
+          <li>The bond may not be instant. A quarter to 40 percent of parents feel indifferent at first. Most fathers bond within two months, through hands-on care.</li>
+          <li>Your hormones change too. Testosterone drops and prolactin rises, which makes you more responsive to crying.</li>
+          <li>Jealousy of the baby or of her is common and does the most damage when buried. Tell her or a friend.</li>
+          <li><strong>Fathers get postpartum depression too</strong>, roughly 1 in 10. In men it looks like anger, irritability, withdrawal, working longer hours, exhaustion, indecision. It usually starts a week or two after the birth. Most people spot it in a mother and miss it in a father. Get help early.</li>
+        </ul>
+      </div>
+      <div class="card stack">
+        <h3>Crying and anger</h3>
+        <ul>
+          <li>Respond every time. You can't spoil a newborn. Most cry 20 minutes to an hour a day, peaking at 6 to 8 weeks.</li>
+          <li>Take turns in 20 to 30 minute shifts.</li>
+          <li>If you feel rage rising, put the baby down safely in the cot and leave the room. Come back when you are calm. Everyone has dark thoughts at 3 am. Acting on them is what matters.</li>
+          <li>Never shake a baby. Never throw one in the air.</li>
+          <li>Call the baby's doctor if crying goes on for more than two hours.</li>
+        </ul>
+      </div>
+      <div class="card stack">
+        <h3>Running the house</h3>
+        <ul>
+          <li>You handle cooking, shopping, laundry, calls and visitors.</li>
+          <li>Short visits, few at a time, and everyone washes their hands for the first month.</li>
+          <li>Keep a list of jobs to hand to anyone who asks "can I help?"</li>
+          <li>Support breastfeeding with praise, food and water. Feeds run 8 to 12 times in 24 hours, more than the book says.</li>
+          <li>Relatives who stay may take over. The book says the two of you decide. Where family help is the norm and welcome, adapt that rather than apply it.</li>
+        </ul>
+      </div>
+      <button type="button" class="btn lesson-done" data-lesson="home">Mark lesson 4 as read</button>
+    </div>
+  </section>
+
+  <!-- ASK -->
+  <section id="screen-ask" class="screen hidden" aria-labelledby="ask-h">
+    <div class="stack" style="gap:4px">
+      <span class="eyebrow">Ask the doctor</span>
+      <h2 id="ask-h">What the book cannot answer here</h2>
+      <p class="muted small">Written for the United States, so these need the hospital. Note the answers as you get them. They are saved on this phone only.</p>
+    </div>
+    <div class="stack" id="ask-list"></div>
+  </section>
+
+  <footer class="small muted" style="margin-top:30px">
+    Built from Brott and Ash Rudick, <em>The Expectant Father</em>, 5th edition, as summarised in the vault. Strong on the father's side, US-centric, and loose with some figures. Where it is wrong or dated, that is marked. None of this replaces her doctor.
+  </footer>
+</div>
+
+<nav class="tabs" aria-label="Screens">
+  <div class="in">
+    <button type="button" data-screen="today" aria-current="page"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>Today</button>
+    <button type="button" data-screen="timeline"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/><circle cx="19" cy="18" r="1.6"/></svg>Journey</button>
+    <button type="button" data-screen="learn"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20"/></svg>Learn</button>
+    <button type="button" data-screen="ask"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M12 8.5v3M12 13.5v.2"/></svg>Ask</button>
+  </div>
+</nav>
+
+<script>
+(function(){
+  var DEFAULT_LMP = "2026-09-06";
+  var store = {
+    get: function(k, d){ try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch(e){ return d; } },
+    set: function(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  };
+  function parse(s){ var p = s.split("-"); return new Date(p[0], p[1]-1, p[2]); }
+  function addDays(d, n){ var x = new Date(d); x.setDate(x.getDate()+n); return x; }
+  function iso(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var DOW = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  function fmt(d){ return d.getDate()+" "+MON[d.getMonth()]; }
+  function fmtY(d){ return fmt(d)+" "+d.getFullYear(); }
+  function weekStart(lmp, w){ return addDays(lmp, w*7); }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function el(id){ return document.getElementById(id); }
+
+  var lmp = parse(store.get("lmp", DEFAULT_LMP));
+  var today = new Date(); today.setHours(0,0,0,0);
+
+  // Fruit sizes, drawn as a soft blob with a leaf. Dimensions are the book's figures for the end of the month.
+  var FRUIT = {
+    1:{name:"a poppy seed", dim:"just settling in", c:"#c9b8d8"},
+    2:{name:"an almond", dim:"heart beating", c:"#d8b89a"},
+    3:{name:"a lime", dim:"5 to 8 cm", c:"#b6d7a8"},
+    4:{name:"an avocado", dim:"10 to 13 cm", c:"#9ec79a"},
+    5:{name:"a mango", dim:"23 cm, 450 g", c:"#f4c27a"},
+    6:{name:"a papaya", dim:"30 cm, 900 g", c:"#f0a46b"},
+    7:{name:"a coconut", dim:"1 to 1.5 kg", c:"#c8a77e"},
+    8:{name:"a pineapple", dim:"45 cm, 2.3 kg", c:"#e9c25c"},
+    9:{name:"a watermelon", dim:"50 cm, 2.7 to 4 kg", c:"#8fc9a0"}
+  };
+  function fruitSVG(c){
+    return '<svg viewBox="0 0 48 48" aria-hidden="true"><ellipse cx="24" cy="28" rx="16" ry="15" fill="'+c+'"/><path d="M24 14c1-6 6-8 10-7-1 5-5 8-10 7z" fill="#8fbf9a"/><ellipse cx="18" cy="24" rx="4" ry="3" fill="rgba(255,255,255,.45)"/></svg>';
+  }
+
+  // The nine months. Weeks are completed weeks, the usual mapping, not the book's own.
+  var MONTHS = [
+    { n:1, w:[0,3], title:"Before you knew", baby:"The cells divide and settle in. Nothing to feel yet.",
+      her:["Nothing to notice yet, or a missed period and tiredness."],
+      babyPts:["Implantation. By the end of the month the heart is forming."],
+      you:["Most men find out at the end of this month or into the next."],
+      todo:[],
+      tips:[["The lag is normal","She will feel pregnant before you feel anything. The book's whole premise is that fathers run about a trimester behind. It is not a sign of not caring."]] },
+    { n:2, w:[4,8], title:"Finding out", baby:"By the end of the month it is officially a fetus, about the size of an almond, with a beating heart and stubby arms.",
+      her:["Nausea, exhaustion, tender breasts, needing to pee often.","Thrilled and frightened at once. Mood swings and sudden crying.","Fear of early miscarriage. Fear that you will not find her attractive."],
+      babyPts:["The main window for organ development runs through to about mid November. Folic acid, no alcohol, no unchecked medicines."],
+      you:["It may feel abstract. You run about a trimester behind her.","You may be holding back excitement in case of miscarriage. That is self-protection, not not caring.","Her nausea affects you too: disrupted work, helplessness."],
+      todo:["Choose the doctor and the hospital together","Go to the first appointment and say you want to be involved","Take over the cooking and the shopping","Water bottle and crackers by her bed","Take over cat litter, garden chemicals and pesticides","Ask whether you have both been screened for thalassaemia","Decide together what you would want to know from screening"],
+      tips:[
+        ["Why it feels abstract","She has symptoms. You have a test result. The book's remedy is to go to every appointment you can, because that is where it becomes real for you and where she sees she is not doing this alone."],
+        ["Crackers by the bed","Nausea is worse on an empty stomach. Small bland meals every two to three hours, before the nausea starts, and something to eat before she gets up."],
+        ["The organ window","Roughly day 17 to day 56 after conception is when the organs form. Folic acid daily, no alcohol, no medicine without asking. After mid November the risk drops."],
+        ["Holding back on purpose","Many men keep their excitement in check in case of miscarriage. The book calls this self-protection and says it is normal. It also says that not telling her how you feel is the part that backfires."],
+        ["Say you want to be involved","Fathers get treated as onlookers unless they say otherwise. At the first visit, tell the doctor you want to be part of this, and ask questions at every visit after."],
+        ["Her side of the fear","She is often thrilled, stunned and frightened at the same time. One of the quieter fears the book lists is that you will stop finding her attractive. Tell her otherwise, often."],
+        ["Thalassaemia","The book lists it among conditions screened by background. It is common in the Maldives, and if both of you are carriers the baby can be affected. Ask whether you have both been tested."]
+      ] },
+    { n:3, w:[9,13], title:"Spreading the word", baby:"About 5 to 8 cm and under 30 g. All the organs are present. It can curl its toes and frown.",
+      her:["Early symptoms start to fade. Clothes start to fit badly.","She turns inward and starts bonding with the baby.","Hearing the heartbeat makes it real for her too."],
+      babyPts:["First-trimester screening falls in this month: NIPT from 9 to 10 weeks, the combined scan and bloods at 11 to 14 weeks."],
+      you:["Hearing the heartbeat is often the moment it becomes real.","Ambivalence is normal: fear for her, fear of losing freedom and money, then guilt about the fear.","You may feel left out as she turns inward. Don't withdraw in return. Say how you feel, calmly.","Sympathy symptoms can start: weight gain, nausea, cravings. Real hormone changes are documented."],
+      todo:["Decide together when and whom to tell: family, then friends, then work","Start the daily 15 minutes about anything except the baby","Set ground rules with relatives about advice and visits","Say what you feel instead of hiding it to protect her","Go to the screening appointments"],
+      tips:[
+        ["Ambivalence is allowed","Fear for her, fear of losing freedom and money and her attention, then guilt for feeling any of it. The book says this is the normal shape of month three, not a flaw."],
+        ["She turns inward","Around now she starts bonding with the baby and may seem to need you less. The mistake is to withdraw in return. Say how you feel, calmly, and stay close."],
+        ["The fifteen minutes","Communication drops for most couples in the first year after a birth, and for many it never recovers. The habit to start now is fifteen minutes a day about anything except the baby."],
+        ["Who to tell, in what order","Family first, then friends, then work. Telling early brings support if something goes wrong. Telling late gives control. Decide it together, and do not leave work to the last minute."],
+        ["Sympathy symptoms are real","Weight gain, nausea, cravings and mood swings in the father are documented, with real hormone changes behind them. The book's nine-in-ten figure is too high, but the effect is not imaginary."],
+        ["Decide before the results","The screening tests come this month. The book's advice is to agree, before any result arrives, what you would want to know and what you would do with it."]
+      ] },
+    { n:4, w:[14,17], title:"Money, money, money", baby:"About 10 to 13 cm, the size of an avocado. Heartbeat 120 to 160 a minute. Sucks its thumb.",
+      her:["Appetite and sex drive return as nausea fades. She may start to show.","Forgetful, clumsy, needs reassurance that you still love her.","Gum problems are common. Mention them to the dentist."],
+      babyPts:["The second trimester. Nausea usually eases and the miscarriage risk has dropped."],
+      you:["The ultrasound is often the turning point.","Money panic is common. The book's point: worrying about money is often how men express fear and love, and the worry is usually out of proportion to the need. Don't take on extra jobs or gamble to fix it.","Over-protection: fixating on her food, sleep and safety. Encourage rather than police."],
+      todo:["Pay down any high-interest debt","Set up a small automatic saving","Check life and disability cover","Get local advice on a will and guardianship, since inheritance here follows Islamic law","Learn a few recipes she likes","Unprompted chores and back rubs, and never a word about her weight"],
+      tips:[
+        ["Money panic, decoded","The book's reading is that worrying about money is how many men express fear and love. The worry is usually far bigger than the need. Do not take a second job or a gamble to fix a feeling."],
+        ["The universal money list","Pay down expensive debt, save a little automatically, protect your own old age before any education fund, keep fees low, and get cover if anyone depends on you. Everything else in the chapter is American."],
+        ["Policing versus encouraging","Over-protection shows up now: fixating on what she eats, how she sleeps, where she goes. The book's advice is to relax and encourage rather than police."],
+        ["The scan as the turning point","For many fathers the ultrasound is where it stops being abstract. Go. Ask for a printout."],
+        ["Never the weight","Of the book's hundred ways to show her you care, the one that is a rule rather than a suggestion: never comment on her weight, even kindly."],
+        ["Wills here","The book says make a will naming a guardian. Inheritance in the Maldives follows Islamic law, so the shape of that is a question for local advice, not a US template."]
+      ] },
+    { n:5, w:[18,22], title:"The lights are on and somebody is home", baby:"About 23 cm and nearly 450 g by the end of the month. Sleeps most of the time. Can hear sounds from outside, and low and middle pitches like a man's voice come through best.",
+      her:["Feels the baby move and knows what it is.","Painless practice contractions. A dark line down the belly.","Needier, sometimes jealous, may need reassurance you won't leave."],
+      babyPts:["The detailed anatomy scan is usually in this window."],
+      you:["Feeling the first kick makes it real, often followed by “I'm not ready”. Nobody is.","You turn inward just as she turns toward you. Tell her what is on your mind rather than “everything will be fine”."],
+      todo:["Talk, read or sing to the baby out loud, up to 15 to 20 minutes twice a day","Try the slice-of-pie exercise: what share of you is husband, son, worker, father, and what kind of father you want to be","Talk about sex. It is safe in a normal pregnancy. Ask the doctor if there is any risk of early labour or a low placenta","Go to the anatomy scan"],
+      tips:[
+        ["Your voice gets through","From about now the baby can hear, and low and middle pitches carry best, which means yours. Talk, read or sing out loud, up to twenty minutes twice a day. The baby learns your voice. Ignore the superbaby claims."],
+        ["“I'm not ready”","The first kick makes it real, and the book says the next thought for many men is that they are not ready. Nobody is. There is no licence for this."],
+        ["The mismatch","She turns toward you now, just as you turn inward to money, safety and your new role. That timing is where most of the friction comes from. Name it."],
+        ["The slice of pie","Draw a circle. What share of you is husband, son, worker, friend, and now father. Then draw the one you want. The book uses it to make the new role concrete."],
+        ["Wrong answer","When she asks for reassurance, “everything will be fine, dear” is the wrong reply. Tell her what is actually on your mind and that you are still here."]
+      ] },
+    { n:6, w:[23,27], title:"Work and family", baby:"About 30 cm and 900 g. Eyes beginning to open. Fingerprints formed.",
+      her:["The biggest weight gain begins.","Backache, swelling, tingling hands, short of breath. Moodiness eases."],
+      babyPts:["Pica, craving non-food things like clay, chalk or ash, is not normal. Call the doctor."],
+      you:["Memories of your own father come up and shape the father you will be. You can copy him or compensate, and you can choose.","Thoughts of mortality: safer driving, interest in family history.","Feeling trapped by her dependence just as you turn inward. Say it gently and never joke about leaving."],
+      todo:["Find out your leave position and write a plan for how the work gets covered","Take a belly photo this month","Start asking the hospital about fathers in the delivery room and in theatre","Book a childbirth class if one is available"],
+      tips:[
+        ["Your own father","Memories and dreams of him tend to surface around now. The book's point is that you either copy him or compensate for him, and that you get to choose which parts."],
+        ["Cover for the work","The book's leave chapter is US law throughout. The practical version here: find out your position now, and write down how the work gets covered for the weeks after the birth."],
+        ["Safer driving","Thoughts of mortality are a documented month-six theme. They show up as safer driving and a sudden interest in family history. Both are fine."],
+        ["Never joke about leaving","Her dependence grows as you turn inward, and feeling trapped is common. Say it gently if you feel it. The one thing the book rules out is joking about leaving."],
+        ["Pica","Craving non-food things like clay, chalk or ash is not a quirk. It needs a call to the doctor."]
+      ] },
+    { n:7, w:[28,31], title:"Entering the home stretch", baby:"Lungs maturing, with a good chance of survival if born now. About 1 to 1.5 kg.",
+      her:["Cramps, heartburn, clumsiness, more practice contractions.","Anxious about labour."],
+      babyPts:["The third trimester. Visits usually move to every two weeks."],
+      you:["The baby may still not feel real until you meet. Strange dreams are common.","Most men dread falling apart in labour. In one study of more than 200 fathers, none did.","As many as half of expectant fathers have some doubts about being in the delivery room. Say so now if you do."],
+      todo:["Start on names: each list ten, swap, strike, repeat. Check initials and nicknames","Take a childbirth class and an infant CPR class","Agree her position on pain relief, and a code word","Decide your part: cutting the cord, holding the baby first, what if there is a C-section","Ask what pain relief the hospital actually offers"],
+      tips:[
+        ["Nobody fell apart","Most men dread losing it in the delivery room. In one study of more than two hundred fathers, not one did. The fear is universal and the outcome is not."],
+        ["Ten names each","List ten, swap, strike, repeat. Check the initials and the obvious nicknames before you fall in love with one."],
+        ["The 51 percent","Agree her stance on pain relief now, with a code word that means she really wants it. If you disagree, she gets the deciding vote. Nobody should be making big decisions mid-labour."],
+        ["Doubts about the room","As many as half of expectant fathers have some doubt about being at the birth. The book says that is normal and that now is the time to say so, not in the moment."],
+        ["The CPR class","Of all the classes, infant CPR is the one the book says not to skip."]
+      ] },
+    { n:8, w:[32,35], title:"Making a list and checking it twice", baby:"About 45 cm and 2.3 kg. Most are head-down by now.",
+      her:["Sleepless, short of breath, swollen, more practice contractions.","Strangers touch her belly."],
+      babyPts:["About one baby in ten is born before 37 weeks. The signs of early labour are the same as real labour, just early. Call the doctor at once."],
+      you:["A last burst of freedom. Nesting, fixing things, finally sorting insurance and the will. Your first chance to do something for the baby."],
+      todo:["Register at the hospital","Choose the baby's doctor","Plan how you get to the hospital, with a backup for the backup. On an island this is the biggest job on the list","Find out where the nearest NICU is and how transfers work","Pack the bags: snacks for you, a charger, something for back rubs, and a car seat if you are driving home","Cook double and freeze portions for the first week home","Decide about cord blood, if you want it","Learn the signs of early labour"],
+      tips:[
+        ["A backup for the backup","The book assumes a hospital within an hour by car. On an island the transport plan needs a boat or a flight, a lead time, and maybe a plan to stay near the hospital in the last weeks."],
+        ["Nesting is yours too","Fixing, painting, sorting the paperwork. The book calls this the father's first real chance to do something for the baby, and says to let yourself."],
+        ["Snacks for you","The bag list has the obvious things for her. It also has snacks and a charger for you, because labour is long and adrenaline hides how tired you are."],
+        ["Cook double","Every meal you cook this month, make two and freeze one. The first week home is not a cooking week."],
+        ["Early labour","About one baby in ten comes before 37 weeks. The signs are the same as real labour, just sooner. The response is the same too: call at once."]
+      ] },
+    { n:9, w:[36,40], title:"Dear, it's time", baby:"Gains about 110 to 230 g a week, ending around 2.7 to 4 kg and 50 cm. From 37 weeks the baby is no longer premature.",
+      her:["The baby drops lower, so breathing eases but sleep gets worse.","More dependent on you, impatient with “any news?” questions, nesting."],
+      babyPts:["Visits usually weekly. Doctors usually start tests if she passes about 41 weeks."],
+      you:["Often the most confusing month. Confident and worried at once, expected to be strong just when you feel least in control."],
+      todo:["Stay close, postpone trips, keep your phone on you","Learn real versus false labour, on the Learn screen","Learn the emergency-birth steps, on the Learn screen","Change your voicemail or status to head off the “any news?” calls","Get the hospital's danger-sign lists for her recovery and for the newborn"],
+      tips:[
+        ["Strong when you feel least in control","The book calls month nine the most confusing. Confident and worried at once, expected to be the steady one just when you feel least steady. Knowing that is most of the remedy."],
+        ["Real or false","Regular, lengthening, strengthening contractions that continue whatever she does, often felt in the lower back. That is real. Irregular, front-of-belly, stops when she moves is practice."],
+        ["Call before you leave","Phone the doctor before you set off for the hospital. Their instruction outranks her wish to stay home a little longer."],
+        ["Head off the calls","Change your voicemail or status so the “any news?” messages answer themselves. She will be sick of them before you are."],
+        ["The emergency steps","Read them once this month, on the Learn screen. On an island the chance of needing them is higher than the book allows, and you do not want to be reading them for the first time."]
+      ] }
+  ];
+
+  var FEELINGS = [
+    ["Thrill, pride, relief","The positive test","Common, sometimes with a secret fear of having been infertile."],
+    ["Unreality","Months 1 to 3","Normal. Going to appointments is the remedy."],
+    ["Holding back","Months 1 to 3","Self-protection against miscarriage, stronger after a past loss."],
+    ["Ambivalence","Month 3","Fear for her safety, of losing freedom, sex, money and her attention. Then guilt for feeling it. Normal."],
+    ["Feeling left out","Month 3 onward","Don't withdraw in return. Say how you feel, calmly."],
+    ["Sympathy symptoms","From month 3, again near the end","Weight gain, nausea, mood swings, cravings. Real hormone changes are documented. The book's 90 percent figure is an upper bound."],
+    ["Money panic","Month 4","Often how men express fear and love. Usually out of proportion to the need."],
+    ["Over-protection","Month 4","Fixating on her food, sleep and safety. Relax, encourage rather than police."],
+    ["“I'm not ready”","Month 5, the first kick","Nobody is. There is no licence for fatherhood."],
+    ["Your own father","Month 6","Memories and dreams of him. You either copy him or compensate, and you can choose."],
+    ["Mortality","Month 6","Safer driving, interest in family roots."],
+    ["Feeling trapped","Month 6","Her dependence grows as you turn inward. Say it gently and never joke about leaving."],
+    ["Fear of falling apart in labour","Month 7","Almost universal. In one study of more than 200 fathers, none did."],
+    ["End-of-freedom panic, nesting","Month 8","Fixing, painting, sorting the will. Your first chance to do something for the baby."],
+    ["Confusion","Month 9","Expected to be strong just when you feel least in control."],
+    ["Pushed out, no instant bond","After the birth","Nearly every father feels pushed out at some point, and a quarter to 40 percent of parents feel no instant bond. Hands-on care fixes both within about two months."]
+  ];
+
+  var INVOLVE = ["Talk about the pregnancy with her, often","Hear the heartbeat","Feel the baby move","Go to a class","Buy something for the baby"];
+
+  var QUESTIONS = [
+    ["What are the danger signs, in one place?","The most important gap in the book. Ask for the hospital's own call-now and go-now lists for pregnancy, for her recovery after the birth, and for the newborn."],
+    ["Will I be allowed in the delivery room, and in theatre for a C-section?","The book assumes yes. Hospitals here may differ, and theatres often have stricter rules. It decides how much of the labour lesson applies."],
+    ["What pain relief is on offer, and is an anaesthetist on call?","The book's options assume one is. It may depend on the hospital, and on whether the birth is in Malé."],
+    ["How do we get to the hospital, and where is the nearest NICU?","On an island the transport plan needs a boat or flight, a lead time, and possibly a plan to stay near the hospital in the last weeks. Ask how transfers are handled."],
+    ["What paternity leave applies, and how will my work be covered?","The book's leave chapter is US law. Check the Employment Act, then plan the cover."],
+    ["Have we both been screened for thalassaemia?","Common in the Maldives. If both parents are carriers, the baby can be affected."],
+    ["Which local fish are safe for her to eat?","The book's mercury list is American. Ask about the tuna species and reef fish eaten here."],
+    ["Will and guardianship","Inheritance follows Islamic law, which fixes shares in ways a US-style will cannot override. Get local legal advice."],
+    ["Her vitamin D and folic acid doses","The book's vitamin D figure is a unit error. Take the doctor's numbers, not the book's."]
+  ];
+
+  function keyDates(){
+    return [
+      { w:6, label:"First scan window opens", sub:"6 to 8 weeks, if the doctor orders one" },
+      { w:9, label:"NIPT available from here", sub:"Cell-free DNA blood test, 9 to 10 weeks" },
+      { w:10, label:"End of the main organ-development window", sub:"Folic acid, no alcohol, no unchecked medicines until here" },
+      { w:11, label:"Combined screen window", sub:"Nuchal scan and bloods, 11 to 14 weeks" },
+      { w:13, label:"End of the first trimester", sub:"Nausea usually eases. The usual time to tell people" },
+      { w:18, label:"She feels the baby move", sub:"Also the detailed anatomy scan, 18 to 22 weeks" },
+      { w:28, label:"Third trimester", sub:"Classes, names, the pain relief talk" },
+      { w:34, label:"Decide about cord blood by here", sub:"If you want it" },
+      { w:37, label:"Full term", sub:"From here the baby is no longer premature" },
+      { w:40, label:"Due date", sub:"About one baby in twenty arrives on the day" },
+      { w:41, label:"Tests usually start", sub:"If she passes about 41 weeks" }
+    ];
+  }
+
+  function monthFor(week){
+    for (var i=0;i<MONTHS.length;i++){ if (week>=MONTHS[i].w[0] && week<=MONTHS[i].w[1]) return MONTHS[i]; }
+    return week<0 ? MONTHS[0] : MONTHS[MONTHS.length-1];
+  }
+
+  function checklist(ul, items, prefix){
+    var checked = store.get("checks", {});
+    ul.innerHTML = items.map(function(t,i){
+      var id = prefix+"-"+i;
+      return '<li><label><input type="checkbox" id="'+id+'" data-key="'+id+'"'+(checked[id]?" checked":"")+'><span>'+esc(t)+'</span></label></li>';
+    }).join("");
+    ul.querySelectorAll("input").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var c = store.get("checks", {});
+        if (cb.checked) c[cb.dataset.key] = true; else delete c[cb.dataset.key];
+        store.set("checks", c);
+        document.querySelectorAll('input[data-key="'+cb.dataset.key+'"]').forEach(function(o){ o.checked = cb.checked; });
+      });
+    });
+  }
+
+  function facetsHTML(m){
+    function list(a){ return "<ul>"+a.map(function(x){ return "<li>"+esc(x)+"</li>"; }).join("")+"</ul>"; }
+    return '<div class="facet her"><span class="eyebrow">Her</span>'+list(m.her)+'</div>'
+      + '<div class="facet baby"><span class="eyebrow">The baby</span><p class="small">'+esc(m.baby)+'</p>'+(m.babyPts.length? list(m.babyPts):"")+'</div>'
+      + '<div class="facet you"><span class="eyebrow">You</span>'+list(m.you)+'</div>';
+  }
+
+  // Daily read: one short piece per day from the current month's tips, in order, then round again.
+  var readOffset = 0;
+  function currentTip(m, days){
+    var tips = m.tips.length ? m.tips : MONTHS[1].tips;
+    var i = ((days % tips.length) + readOffset) % tips.length;
+    return { key: "m"+m.n+"-"+i, t: tips[i] };
+  }
+  function renderRead(m, days){
+    var r = currentTip(m, days), reads = store.get("reads", {});
+    el("read-title").textContent = r.t[0];
+    el("read-body").textContent = r.t[1];
+    el("read-done").textContent = reads[r.key] ? "Read" : "Mark as read";
+    el("read-done").setAttribute("aria-pressed", String(!!reads[r.key]));
+    el("read-done").dataset.key = r.key;
+    el("s-read").textContent = Object.keys(reads).length;
+  }
+
+  function renderAppts(){
+    var a = store.get("appts", []).slice().sort(function(x,y){ return x.d < y.d ? -1 : 1; });
+    el("appts").innerHTML = a.length ? a.map(function(x,i){
+      var d = parse(x.d), past = d < today;
+      return '<div class="appt'+(past?' past':'')+'"><div class="d'+(past?' muted':'')+'">'+fmt(d)+'<br><span class="small muted" style="font-family:var(--body);font-weight:600">'+DOW[d.getDay()].slice(0,3)+'</span></div><div>'+esc(x.l)+'</div><button type="button" class="x" data-i="'+i+'" aria-label="Remove">×</button></div>';
+    }).join("") : '<p class="small muted">Nothing booked yet. Add the next scan or clinic visit.</p>';
+    el("appts").querySelectorAll(".x").forEach(function(b){
+      b.addEventListener("click", function(){
+        var list = store.get("appts", []).slice().sort(function(x,y){ return x.d < y.d ? -1 : 1; });
+        list.splice(parseInt(b.dataset.i,10),1); store.set("appts", list); renderAppts();
+      });
+    });
+  }
+
+  function renderLearnProgress(){
+    var done = store.get("lessons", {}), n = Object.keys(done).length;
+    el("learn-progress").textContent = n===4 ? "All four read. Come back to any of them when the month arrives." : n+" of 4 read. Lesson 1 is the one to start with.";
+    document.querySelectorAll("[data-done]").forEach(function(s){ s.textContent = done[s.dataset.done] ? "Read" : ""; });
+    document.querySelectorAll(".lesson-done").forEach(function(b){
+      var k = b.dataset.lesson, i = ["feelings","her","labour","home"].indexOf(k)+1;
+      b.textContent = done[k] ? "Lesson "+i+" read" : "Mark lesson "+i+" as read";
+      b.setAttribute("aria-pressed", String(!!done[k]));
+    });
+  }
+
+  function render(){
+    var days = Math.floor((today - lmp)/86400000);
+    var week = Math.floor(days/7), day = days - week*7;
+    var due = weekStart(lmp, 40);
+    var toDue = Math.round((due - today)/86400000);
+    var m = monthFor(week);
+    var tri = week<14 ? 1 : week<28 ? 2 : 3;
+    var f = FRUIT[m.n];
+
+    el("today-h").textContent = DOW[today.getDay()]+", "+fmtY(today);
+    el("tri-pill").textContent = "Trimester "+tri;
+    el("h-week").textContent = "Week "+Math.max(0,week);
+    el("h-day").textContent = "day "+day;
+    el("h-month").textContent = "Month "+m.n+" of 9, “"+m.title+"”";
+    el("h-due").textContent = "Due about "+fmtY(due);
+    el("fruit").innerHTML = fruitSVG(f.c)+'<span class="name">'+esc(f.name)+'</span><span class="dim">'+esc(f.dim)+'</span>';
+    var pct = Math.max(0, Math.min(100, Math.round(days/280*100)));
+    el("progress").style.width = pct+"%";
+    el("p-pct").textContent = pct+"% of the way";
+    el("s-days").textContent = Math.max(0,toDue);
+    el("s-weeks").textContent = Math.max(0, Math.ceil(toDue/7));
+    el("month-title").textContent = "This month: "+m.title.toLowerCase();
+    el("month-label").textContent = "Weeks "+m.w[0]+" to "+m.w[1]+", "+fmt(weekStart(lmp,m.w[0]))+" to "+fmt(addDays(weekStart(lmp,m.w[1]+1),-1));
+    el("today-facets").innerHTML = facetsHTML(m);
+    checklist(el("today-check"), m.todo.length? m.todo : ["Nothing on the list yet. Open the Journey to read ahead."], "m"+m.n);
+    el("fullterm-inline").textContent = fmtY(weekStart(lmp,37))+", due "+fmtY(due);
+    renderRead(m, days);
+    renderAppts();
+
+    var kds = keyDates(), nextMarked = false;
+    el("keydates").innerHTML = kds.map(function(k){
+      var d = weekStart(lmp,k.w), past = d < today, cls = past ? "past" : "";
+      if (!past && !nextMarked){ cls = "next"; nextMarked = true; }
+      return '<div class="kd '+cls+'"><div class="d">'+fmt(d)+'<span>week '+k.w+'</span></div><div><div>'+esc(k.label)+'</div><div class="small muted">'+esc(k.sub)+'</div></div></div>';
+    }).join("");
+
+    el("timeline").innerHTML = MONTHS.map(function(mm){
+      var start = weekStart(lmp,mm.w[0]), end = addDays(weekStart(lmp,mm.w[1]+1),-1);
+      var state = end < today ? "past" : start > today ? "" : "now";
+      var pill = state==="now" ? '<span class="pill now">Now</span>' : state==="past" ? '<span class="pill past">Done</span>' : '<span class="pill">Ahead</span>';
+      var fr = FRUIT[mm.n];
+      return '<details id="month-'+mm.n+'"'+(state==="now"?' class="now" open':'')+'><summary><div style="width:40px;height:40px;flex:0 0 auto">'+fruitSVG(fr.c)+'</div><div class="t"><span class="eyebrow">Month '+mm.n+' · '+fmt(start)+' to '+fmt(end)+'</span><h3>'+esc(mm.title)+'</h3></div>'+pill+'<span class="chev">›</span></summary>'
+        + '<div class="body"><div class="facets">'+facetsHTML(mm)+'</div>'
+        + (mm.todo.length ? '<div class="facet do"><span class="eyebrow">To do</span><ul class="check" data-month="'+mm.n+'"></ul></div>' : '')
+        + '</div></details>';
+    }).join("")
+    + '<details id="month-birth"><summary><div class="t"><span class="eyebrow">Around '+fmt(weekStart(lmp,37))+' to '+fmt(weekStart(lmp,41))+'</span><h3>Labour and birth</h3></div><span class="pill">Ahead</span><span class="chev">›</span></summary><div class="body"><p>Real versus false labour, your job in each stage, a C-section and the emergency-birth steps are in Lesson 3.</p><button type="button" class="btn small ghost goto" data-goto="learn:labour">Open lesson 3</button></div></details>'
+    + '<details id="month-home"><summary><div class="t"><span class="eyebrow">About six weeks after the birth</span><h3>The first weeks home</h3></div><span class="pill">Ahead</span><span class="chev">›</span></summary><div class="body"><p>Her recovery, blues versus depression, safe sleep, bonding, your own mood, and crying are in Lesson 4.</p><button type="button" class="btn small ghost goto" data-goto="learn:home">Open lesson 4</button></div></details>';
+    document.querySelectorAll("#timeline ul.check").forEach(function(ul){
+      var mm = MONTHS[parseInt(ul.dataset.month,10)-1];
+      checklist(ul, mm.todo, "m"+mm.n);
+    });
+    document.querySelectorAll(".goto").forEach(function(b){
+      b.addEventListener("click", function(){ var p=b.dataset.goto.split(":"); showScreen(p[0]); showLesson(p[1]); });
+    });
+    el("due-input").value = iso(due);
+  }
+
+  // Learn
+  el("feelings-grid").innerHTML = FEELINGS.map(function(f){
+    return '<div class="lesson"><div class="when">'+esc(f[1])+'</div><h3>'+esc(f[0])+'</h3><p class="small" style="margin-top:4px">'+esc(f[2])+'</p></div>';
+  }).join("");
+  checklist(el("involve-check"), INVOLVE, "inv");
+
+  function showLesson(name){
+    document.querySelectorAll(".lesson-pane").forEach(function(p){ p.classList.toggle("hidden", p.id !== "lesson-"+name); });
+    document.querySelectorAll("#learn-nav button").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.lesson===name)); });
+    store.set("lesson", name);
+  }
+  document.querySelectorAll("#learn-nav button").forEach(function(b){ b.addEventListener("click", function(){ showLesson(b.dataset.lesson); }); });
+  document.querySelectorAll(".lesson-done").forEach(function(b){
+    b.addEventListener("click", function(){
+      var d = store.get("lessons", {}); if (d[b.dataset.lesson]) delete d[b.dataset.lesson]; else d[b.dataset.lesson] = true;
+      store.set("lessons", d); renderLearnProgress();
+    });
+  });
+  renderLearnProgress();
+
+  // Daily read buttons
+  el("read-done").addEventListener("click", function(){
+    var r = store.get("reads", {}), k = el("read-done").dataset.key;
+    if (r[k]) delete r[k]; else r[k] = true;
+    store.set("reads", r);
+    var days = Math.floor((today - lmp)/86400000); renderRead(monthFor(Math.floor(days/7)), days);
+  });
+  el("read-next").addEventListener("click", function(){
+    readOffset++; var days = Math.floor((today - lmp)/86400000); renderRead(monthFor(Math.floor(days/7)), days);
+  });
+
+  // Appointments
+  el("appt-add").addEventListener("click", function(){
+    var d = el("appt-date").value, l = el("appt-label").value.trim();
+    if (!d || !l) return;
+    var a = store.get("appts", []); a.push({d:d, l:l}); store.set("appts", a);
+    el("appt-label").value = ""; renderAppts();
+  });
+
+  // Ask
+  var answers = store.get("answers", {});
+  el("ask-list").innerHTML = QUESTIONS.map(function(q,i){
+    return '<div class="card stack"><h3>'+esc(q[0])+'</h3><p class="small muted">'+esc(q[1])+'</p><textarea id="ans-'+i+'" data-i="'+i+'" placeholder="What the doctor or hospital said, and when">'+esc(answers[i]||"")+'</textarea></div>';
+  }).join("");
+  document.querySelectorAll("#ask-list textarea").forEach(function(t){
+    t.addEventListener("input", function(){ var a = store.get("answers", {}); a[t.dataset.i] = t.value; store.set("answers", a); });
+  });
+
+  // Screens
+  function showScreen(name){
+    ["today","timeline","learn","ask"].forEach(function(s){ el("screen-"+s).classList.toggle("hidden", s!==name); });
+    document.querySelectorAll("nav.tabs button").forEach(function(b){
+      if (b.dataset.screen===name) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current");
+    });
+    window.scrollTo(0,0);
+    store.set("screen", name);
+  }
+  document.querySelectorAll("nav.tabs button").forEach(function(b){ b.addEventListener("click", function(){ showScreen(b.dataset.screen); }); });
+
+  // Due date
+  el("due-save").addEventListener("click", function(){
+    var v = el("due-input").value; if (!v) return;
+    lmp = addDays(parse(v), -280); store.set("lmp", iso(lmp)); render();
+  });
+  el("due-reset").addEventListener("click", function(){ lmp = parse(DEFAULT_LMP); store.set("lmp", DEFAULT_LMP); render(); });
+
+  render();
+  var hash = (location.hash||"").replace("#","");
+  showScreen(["today","timeline","learn","ask"].indexOf(hash)>=0 ? hash : store.get("screen","today"));
+  showLesson(store.get("lesson","feelings"));
+})();
+</script>
+<script>if ("serviceWorker" in navigator) { window.addEventListener("load", function(){ navigator.serviceWorker.register("./sw.js").catch(function(){}); }); }</script>
+</body>
+</html>
