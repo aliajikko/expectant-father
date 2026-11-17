@@ -66,7 +66,7 @@ a{color:var(--rose-deep)}
 .hero .big small{font-size:1.1rem;font-weight:600;color:var(--muted);margin-left:4px}
 .hero .sub{font-weight:600}
 .fruit{width:112px;height:112px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;box-shadow:var(--shadow);padding:8px}
-.fruit svg{width:44px;height:44px}
+.fruit svg{width:66px;height:66px}
 .fruit .name{font-family:var(--display);font-weight:700;font-size:.85rem;line-height:1.1}
 .fruit .dim{font-size:.68rem;color:var(--muted);line-height:1.1}
 @media (max-width:380px){.hero{grid-template-columns:1fr}.fruit{width:96px;height:96px}}
@@ -145,8 +145,14 @@ textarea:focus,input:focus,button:focus-visible{outline:3px solid var(--lavender
 .appt .d{font-family:var(--display);font-weight:700;font-size:.9rem}
 .appt .x{background:none;border:0;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px 8px}
 .appt textarea{margin-top:6px;min-height:44px}
-.apptform{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
-@media (max-width:460px){.apptform{grid-template-columns:1fr 1fr}.apptform .btn{grid-column:1 / -1}}
+.apptform{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
+.apptform .btn{grid-column:1 / -1;width:max-content}
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ph{margin:0;position:relative;background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.ph img{width:100%;aspect-ratio:3 / 4;object-fit:cover;display:block}
+.ph figcaption{font-size:.72rem;padding:6px 8px;font-weight:600;line-height:1.2}
+.ph .x{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.45);color:#fff;border:0;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:1rem;line-height:1}
+#month-fold summary .t h3{margin-top:4px}
 .duedate{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center}
 @media (max-width:460px){.duedate{grid-template-columns:1fr 1fr}.duedate input{grid-column:1 / -1}}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
@@ -244,36 +250,16 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
       <p class="small muted" id="herday-note"></p>
     </div>
 
-    <div class="stack" style="gap:8px">
-      <h2 id="month-title"></h2>
-      <p class="muted small" id="month-label"></p>
-    </div>
-    <div class="facets" id="today-facets"></div>
-
     <div class="tint butter stack">
       <span class="eyebrow" style="color:var(--amber)">For you to do this month</span>
       <ul class="check" id="today-check"></ul>
     </div>
 
+    <details id="month-fold"><summary><div class="t"><span class="eyebrow" id="month-label"></span><h3 id="month-title"></h3></div><span class="chev">&#8250;</span></summary><div class="body"><div class="facets" id="today-facets"></div><button type="button" class="btn small ghost goto" data-goto="timeline:">Open the journey</button></div></details>
+
     <div class="card stack">
       <div class="row between"><h3>Next appointment</h3><button type="button" class="btn small ghost goto" data-goto="log:appts">All</button></div>
       <div id="next-appt"></div>
-    </div>
-
-    <div class="card stack">
-      <h3>Key dates</h3>
-      <div class="keydates" id="keydates"></div>
-      <p class="small muted">Counted in completed weeks from the first day of her last period, the way doctors count. Only about one baby in twenty arrives on the due date.</p>
-    </div>
-
-    <div class="card stack">
-      <h3>Adjust the due date</h3>
-      <p class="small muted">The first scan usually moves it by a few days. Enter the doctor's date and everything here shifts to match.</p>
-      <div class="duedate">
-        <input type="date" id="due-input" aria-label="Due date">
-        <button type="button" class="btn small" id="due-save">Save</button>
-        <button type="button" class="btn small ghost" id="due-reset">Reset</button>
-      </div>
     </div>
 
     <div class="callout">
@@ -288,7 +274,21 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
       <h2 id="timeline-h">Nine months, then birth, then home</h2>
       <p class="muted small">Tap a month. Each has what she is going through, what the baby is doing, what you are likely to feel, and what to do. Ticks are kept on this phone.</p>
     </div>
+    <div class="card stack">
+      <h3>Key dates</h3>
+      <div class="keydates" id="keydates"></div>
+      <p class="small muted">Counted in completed weeks from the first day of her last period, the way doctors count. Only about one baby in twenty arrives on the due date.</p>
+    </div>
     <div class="stack" id="timeline"></div>
+    <div class="card stack">
+      <h3>Adjust the due date</h3>
+      <p class="small muted">The first scan usually moves it by a few days. Enter the doctor's date and everything here shifts to match.</p>
+      <div class="duedate">
+        <input type="date" id="due-input" aria-label="Due date">
+        <button type="button" class="btn small" id="due-save">Save</button>
+        <button type="button" class="btn small ghost" id="due-reset">Reset</button>
+      </div>
+    </div>
   </section>
 
   <!-- LEARN -->
@@ -651,7 +651,17 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
       <button type="button" class="chip" data-log="her" aria-pressed="true">Her day</button>
       <button type="button" class="chip" data-log="you" aria-pressed="false">Your check-in</button>
       <button type="button" class="chip" data-log="appts" aria-pressed="false">Appointments</button>
+      <button type="button" class="chip" data-log="photos" aria-pressed="false">Photos</button>
       <button type="button" class="chip" data-log="ask" aria-pressed="false">Ask the doctor</button>
+    </div>
+
+    <div id="log-photos" class="stack log-pane hidden">
+      <div class="card stack">
+        <h3>Bump photos</h3>
+        <p class="small muted">The book says one a month, then weekly from month 8, from the front and the side. Each is stored small on this phone and included in the backup.</p>
+        <label class="btn small" style="display:inline-block;width:max-content">Add a photo<input type="file" id="photo-input" accept="image/*" style="display:none"></label>
+        <div class="photos" id="photo-strip"></div>
+      </div>
     </div>
 
     <div id="log-her" class="stack log-pane">
@@ -668,6 +678,12 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
         <div class="week" id="week-strip"></div>
         <p class="small muted">Each day shows nausea, energy, mood and sleep as four dots. Green is fine, yellow is some, pink is a hard day. The nausea row is the one to watch in months 2 and 3, and the mood row after the birth.</p>
         <p class="small" id="week-insight"></p>
+      </div>
+      <div class="card stack">
+        <h3>Summary for the doctor</h3>
+        <p class="small muted">The last four weeks as plain text: rough days, low days, poor nights, and her notes. Copied to the clipboard to read out or show.</p>
+        <div class="row"><button type="button" class="btn small" id="doc-summary">Make summary</button><span class="small muted" id="doc-msg"></span></div>
+        <textarea id="doc-text" hidden style="min-height:140px"></textarea>
       </div>
     </div>
 
@@ -691,7 +707,8 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
         <div class="appts" id="appts"></div>
         <div class="apptform">
           <label class="small muted" style="display:flex;flex-direction:column;gap:4px">Date<input type="date" id="appt-date"></label>
-          <label class="small muted" style="display:flex;flex-direction:column;gap:4px">What<input type="text" id="appt-label" placeholder="Scan, bloods, clinic"></label>
+          <label class="small muted" style="display:flex;flex-direction:column;gap:4px">Time<input type="time" id="appt-time"></label>
+          <label class="small muted" style="display:flex;flex-direction:column;gap:4px;grid-column:1 / -1">What<input type="text" id="appt-label" placeholder="Scan, bloods, clinic"></label>
           <button type="button" class="btn small" id="appt-add">Add</button>
         </div>
       </div>
@@ -743,7 +760,7 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
 <script>
 (function(){
   var DEFAULT_LMP = "2026-09-06";
-  var KEYS = ["lmp","checks","reads","lessons","appts","answers","herday","checkins","kicks","contractions","names","screen","lesson","tool","log"];
+  var KEYS = ["lmp","checks","reads","lessons","appts","answers","herday","checkins","kicks","contractions","names","photos","screen","lesson","tool","log"];
   var store = {
     get: function(k, d){ try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch(e){ return d; } },
     set: function(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
@@ -772,7 +789,29 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
     7:{name:"a coconut", dim:"1 to 1.5 kg", c:"#c8a77e"}, 8:{name:"a pineapple", dim:"45 cm, 2.3 kg", c:"#e9c25c"},
     9:{name:"a watermelon", dim:"50 cm, 2.7 to 4 kg", c:"#8fc9a0"}
   };
-  function fruitSVG(c){ return '<svg viewBox="0 0 48 48" aria-hidden="true"><ellipse cx="24" cy="28" rx="16" ry="15" fill="'+c+'"/><path d="M24 14c1-6 6-8 10-7-1 5-5 8-10 7z" fill="#8fbf9a"/><ellipse cx="18" cy="24" rx="4" ry="3" fill="rgba(255,255,255,.45)"/></svg>'; }
+  // Each month's fruit drawn as a small character: its own body, the same gentle face.
+  function face(cx, cy, s){
+    s = s || 1; var ink = "#3b2a2e";
+    function eye(x){ return '<circle cx="'+x+'" cy="'+cy+'" r="'+(2.4*s)+'" fill="'+ink+'"/><circle cx="'+(x+0.8*s)+'" cy="'+(cy-0.9*s)+'" r="'+(0.8*s)+'" fill="#fff"/>'; }
+    return eye(cx-6*s)+eye(cx+6*s)
+      +'<ellipse cx="'+(cx-11*s)+'" cy="'+(cy+4.5*s)+'" rx="'+(3.2*s)+'" ry="'+(1.9*s)+'" fill="#f08a8a" opacity=".5"/><ellipse cx="'+(cx+11*s)+'" cy="'+(cy+4.5*s)+'" rx="'+(3.2*s)+'" ry="'+(1.9*s)+'" fill="#f08a8a" opacity=".5"/>'
+      +'<path d="M'+(cx-3.5*s)+' '+(cy+5*s)+' q'+(3.5*s)+' '+(3.2*s)+' '+(7*s)+' 0" stroke="'+ink+'" stroke-width="'+(1.7*s)+'" fill="none" stroke-linecap="round"/>';
+  }
+  var LEAF = '<path d="M32 16c1-7 7-9 12-8-1 6-6 9-12 8z" fill="#8fbf9a"/><path d="M32 16c-1-5-5-7-9-6 1 4 4 6 9 6z" fill="#7fb08a"/>';
+  var SHINE = '<ellipse cx="24" cy="30" rx="4" ry="2.6" fill="#fff" opacity=".45"/>';
+  var BODIES = {
+    1: '<circle cx="32" cy="38" r="14" fill="#8a86b8"/><ellipse cx="27" cy="33" rx="3" ry="2" fill="#fff" opacity=".45"/>' + '',
+    2: '<ellipse cx="32" cy="38" rx="14" ry="19" transform="rotate(-14 32 38)" fill="#dcbb99"/><ellipse cx="32" cy="38" rx="9" ry="13" transform="rotate(-14 32 38)" fill="#e9d0b4"/>',
+    3: LEAF + '<circle cx="32" cy="40" r="19" fill="#a3cf7f"/><ellipse cx="25" cy="33" rx="4" ry="2.6" fill="#fff" opacity=".45"/>',
+    4: '<path d="M32 10C22 10 13 24 13 40c0 12 9 18 19 18s19-6 19-18c0-16-9-30-19-30z" fill="#5f935a"/><path d="M32 18c-7 0-13 10-13 23 0 9 6 13 13 13s13-4 13-13c0-13-6-23-13-23z" fill="#d3e49c"/><path d="M32 10c1-4 4-5 6-4" stroke="#6b5a46" stroke-width="2" fill="none" stroke-linecap="round"/>',
+    5: '<path d="M19 24c6-13 31-11 33 10 2 16-12 24-24 22C14 54 12 38 19 24z" fill="#f5bf62"/><ellipse cx="44" cy="26" rx="9" ry="7" fill="#ef8f6e" opacity=".75"/><path d="M28 16c-1-4-3-6-6-7" stroke="#6b5a46" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="24" cy="30" rx="4" ry="2.6" fill="#fff" opacity=".45"/>',
+    6: '<ellipse cx="32" cy="38" rx="15" ry="21" fill="#f0a46b"/><ellipse cx="32" cy="40" rx="9" ry="14" fill="#f7c38f"/><circle cx="32" cy="16" r="3.5" fill="#7fb08a"/>',
+    7: '<circle cx="32" cy="40" r="19" fill="#a4724f"/><path d="M18 32q14-8 28 0M16 42q16-8 32 0M20 51q12-6 24 0" stroke="#c49272" stroke-width="2" fill="none" opacity=".7"/><path d="M32 20c0-6 6-10 12-9-2 6-7 9-12 9z" fill="#8fbf9a"/><path d="M32 20c-2-5-7-8-12-6 2 5 7 7 12 6z" fill="#7fb08a"/>',
+    8: '<path d="M32 25l-8-16 8 6 8-6z" fill="#7fbf8f"/><path d="M32 24l-14-8 10 10zM32 24l14-8-10 10z" fill="#6aa97b"/><ellipse cx="32" cy="43" rx="15" ry="18" fill="#efc85b"/><path d="M20 34l24 18M18 42l20 18M26 28l22 18M18 50l10 10M32 26l16 12M20 32l-2 2M44 30l-20 30M50 38l-18 24M38 26l-20 26M46 34l-18 26" stroke="#d9ad3f" stroke-width="1.3" opacity=".6"/>',
+    9: '<circle cx="32" cy="40" r="20" fill="#7fc48a"/><path d="M22 23q7 17 0 34M32 20q7 20 0 40M42 23q-7 17 0 34" stroke="#4f9a5f" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/><path d="M32 20c0-4 2-6 5-6" stroke="#6b5a46" stroke-width="2" fill="none" stroke-linecap="round"/>'
+  };
+  var FACES = { 1:[32,38,0.75], 2:[32,40,0.9], 3:[32,42,1], 4:[32,44,0.95], 5:[33,41,1], 6:[32,43,0.9], 7:[32,42,1], 8:[32,46,0.95], 9:[32,42,1] };
+  function fruitSVG(n){ var f = FACES[n]; return '<svg viewBox="0 0 64 64" aria-hidden="true">'+BODIES[n]+face(f[0],f[1],f[2])+'</svg>'; }
 
   var MONTHS = [
     { n:1, w:[0,3], title:"Before you knew", baby:"The cells divide and settle in. Nothing to feel yet.", her:["Nothing to notice yet, or a missed period and tiredness."], babyPts:["Implantation. By the end of the month the heart is forming."], you:["Most men find out at the end of this month or into the next."], todo:[] },
@@ -1008,7 +1047,7 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
     var html = "", worst = 0, nauseaDays = 0, lowMood = 0;
     for (var i=0;i<7;i++){
       var d = addDays(start,i), k = iso(d), e = log[k]||{};
-      var dots = ["nausea","energy","mood","sleep"].map(function(f){ return '<i class="'+(e[f]!==undefined?'l'+Math.min(3,Math.max(1,e[f]||0)):'')+(e[f]===0?' l1':'')+'"></i>'; }).join("");
+      var dots = ["nausea","energy","mood","sleep"].map(function(f){ var v = e[f]; return '<i class="'+(v===undefined?'':v===0?'l1':v===1?'l2':'l3')+'"></i>'; }).join("");
       if (e.nausea>=2) nauseaDays++; if (e.mood>=2) lowMood++;
       html += '<button type="button" class="day'+(k===iso(today)?' today':'')+'" data-date="'+k+'"><div class="dn">'+DOW[d.getDay()].slice(0,2)+'</div><div>'+d.getDate()+'</div><div class="dots">'+dots+'</div></button>';
     }
@@ -1047,7 +1086,7 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
     var a = appts();
     el("appts").innerHTML = a.length ? a.map(function(x,i){
       var d = parse(x.d), past = d < today;
-      return '<div class="appt"><div class="d'+(past?' muted':'')+'">'+fmt(d)+'<br><span class="small muted" style="font-family:var(--body);font-weight:600">'+DOW[d.getDay()].slice(0,3)+'</span></div><div><div style="font-weight:600">'+esc(x.l)+'</div><textarea data-i="'+i+'" placeholder="'+(past?'What was said, what is next':'Questions to bring')+'">'+esc(x.n||"")+'</textarea></div><button type="button" class="x" data-i="'+i+'" aria-label="Remove">×</button></div>';
+      return '<div class="appt"><div class="d'+(past?' muted':'')+'">'+fmt(d)+'<br><span class="small muted" style="font-family:var(--body);font-weight:600">'+DOW[d.getDay()].slice(0,3)+(x.t?' '+esc(x.t):'')+'</span></div><div><div style="font-weight:600">'+esc(x.l)+'</div><textarea data-i="'+i+'" placeholder="'+(past?'What was said, what is next':'Questions to bring')+'">'+esc(x.n||"")+'</textarea></div><button type="button" class="x" data-i="'+i+'" aria-label="Remove">×</button></div>';
     }).join("") : '<p class="small muted">Nothing booked yet. Add the next scan or clinic visit.</p>';
     el("appts").querySelectorAll(".x").forEach(function(b){ b.addEventListener("click", function(){ var list=appts(); list.splice(parseInt(b.dataset.i,10),1); store.set("appts", list); renderAppts(); }); });
     el("appts").querySelectorAll("textarea").forEach(function(t){ t.addEventListener("input", function(){ var list=appts(); list[parseInt(t.dataset.i,10)].n=t.value; store.set("appts", list); renderNextAppt(); }); });
@@ -1055,9 +1094,41 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
   }
   function renderNextAppt(){
     var next = appts().filter(function(x){ return parse(x.d) >= today; })[0];
-    el("next-appt").innerHTML = next ? '<div class="row between"><div><strong>'+esc(next.l)+'</strong><div class="small muted">'+DOW[parse(next.d).getDay()]+", "+fmtY(parse(next.d))+'</div></div><span class="pill">'+Math.round((parse(next.d)-today)/86400000)+' days</span></div>'+(next.n?'<p class="small" style="margin-top:8px">'+esc(next.n)+'</p>':'<p class="small muted" style="margin-top:8px">Add the questions you want to bring, under Log.</p>') : '<p class="small muted">Nothing booked. Add the next visit under Log.</p>';
+    el("next-appt").innerHTML = next ? '<div class="row between"><div><strong>'+esc(next.l)+'</strong><div class="small muted">'+DOW[parse(next.d).getDay()]+", "+fmtY(parse(next.d))+(next.t?" at "+esc(next.t):"")+'</div></div><span class="pill">'+Math.round((parse(next.d)-today)/86400000)+' days</span></div>'+(next.n?'<p class="small" style="margin-top:8px">'+esc(next.n)+'</p>':'<p class="small muted" style="margin-top:8px">Add the questions you want to bring, under Log.</p>') : '<p class="small muted">Nothing booked. Add the next visit under Log.</p>';
   }
-  el("appt-add").addEventListener("click", function(){ var d=el("appt-date").value, l=el("appt-label").value.trim(); if (!d||!l) return; var a=store.get("appts",[]); a.push({d:d,l:l,n:""}); store.set("appts",a); el("appt-label").value=""; renderAppts(); });
+  el("appt-add").addEventListener("click", function(){ var d=el("appt-date").value, l=el("appt-label").value.trim(), t=el("appt-time").value; if (!d||!l) return; var a=store.get("appts",[]); a.push({d:d,l:l,t:t,n:""}); store.set("appts",a); el("appt-label").value=""; el("appt-time").value=""; renderAppts(); });
+
+  // ---------- doctor summary ----------
+  el("doc-summary").addEventListener("click", function(){
+    var log=herLog(), c={nausea:0,energy:0,mood:0,sleep:0}, n=0, notes=[];
+    for (var i=27;i>=0;i--){ var k=iso(addDays(today,-i)), e=log[k]; if (!e) continue; n++; ["nausea","energy","mood","sleep"].forEach(function(f){ if (e[f]>=2) c[f]++; }); if (e.text) notes.push(fmt(parse(k))+": "+e.text); }
+    var days=Math.floor((today-lmp)/86400000);
+    var txt="Four weeks to "+fmtY(today)+", pregnancy week "+Math.floor(days/7)+"\nDays logged: "+n+" of 28\nRough nausea days: "+c.nausea+"\nLow mood days: "+c.mood+"\nPoor sleep nights: "+c.sleep+"\nWiped-out days: "+c.energy+(notes.length?"\n\nNotes\n"+notes.join("\n"):"");
+    el("doc-text").value=txt; el("doc-text").hidden=false;
+    try { navigator.clipboard.writeText(txt).then(function(){ el("doc-msg").textContent="Copied."; }, function(){ el("doc-msg").textContent="Select the text and copy it."; }); } catch(e){ el("doc-msg").textContent="Select the text and copy it."; }
+  });
+
+  // ---------- photos ----------
+  function photos(){ return store.get("photos", []); }
+  function renderPhotos(){
+    var p = photos();
+    el("photo-strip").innerHTML = p.length ? p.map(function(x,i){ return '<figure class="ph"><img src="'+x.data+'" alt="Bump photo, week '+x.w+'"><figcaption>Week '+x.w+'<br><span class="muted">'+fmt(parse(x.d))+'</span></figcaption><button type="button" class="x" data-i="'+i+'" aria-label="Remove">×</button></figure>'; }).join("") : '<p class="small muted">No photos yet.</p>';
+    el("photo-strip").querySelectorAll(".x").forEach(function(b){ b.addEventListener("click", function(){ var list=photos(); list.splice(parseInt(b.dataset.i,10),1); store.set("photos", list); renderPhotos(); }); });
+  }
+  el("photo-input").addEventListener("change", function(){
+    var f = el("photo-input").files[0]; if (!f) return;
+    var img = new Image(), url = URL.createObjectURL(f);
+    img.onload = function(){
+      var max = 560, r = Math.min(1, max/Math.max(img.width, img.height));
+      var c = document.createElement("canvas"); c.width = Math.round(img.width*r); c.height = Math.round(img.height*r);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      var data = c.toDataURL("image/jpeg", 0.72); URL.revokeObjectURL(url);
+      var days = Math.floor((today-lmp)/86400000), p = photos(); p.push({d:iso(today), w:Math.floor(days/7), data:data});
+      store.set("photos", p); renderPhotos(); el("photo-input").value = "";
+    };
+    img.src = url;
+  });
+  renderPhotos();
 
   // ---------- ask ----------
   var answers = store.get("answers", {});
@@ -1146,7 +1217,7 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
     window.scrollTo(0,0); store.set("screen", name);
   }
   document.querySelectorAll("nav.tabs button").forEach(function(b){ b.addEventListener("click", function(){ showScreen(b.dataset.screen); }); });
-  function bindGotos(){ document.querySelectorAll(".goto").forEach(function(b){ if (b.dataset.bound) return; b.dataset.bound="1"; b.addEventListener("click", function(){ var p=b.dataset.goto.split(":"); if (p[0]==="learn"){ showScreen("learn"); showLesson(p[1]); } else if (p[0]==="log"){ showScreen("log"); showSub("log", p[1], "log"); } else if (p[0]==="tools"){ showScreen("tools"); showSub("tool", p[1], "tool"); } }); }); }
+  function bindGotos(){ document.querySelectorAll(".goto").forEach(function(b){ if (b.dataset.bound) return; b.dataset.bound="1"; b.addEventListener("click", function(){ var p=b.dataset.goto.split(":"); if (p[0]==="learn"){ showScreen("learn"); showLesson(p[1]); } else if (p[0]==="log"){ showScreen("log"); showSub("log", p[1], "log"); } else if (p[0]==="tools"){ showScreen("tools"); showSub("tool", p[1], "tool"); } else if (p[0]==="timeline"){ showScreen("timeline"); } }); }); }
 
   // ---------- main render ----------
   function render(){
@@ -1155,7 +1226,7 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
     el("today-h").textContent = DOW[today.getDay()]+", "+fmtY(today); el("tri-pill").textContent = "Trimester "+tri;
     el("h-week").textContent = "Week "+Math.max(0,week); el("h-day").textContent = "day "+day;
     el("h-month").textContent = "Month "+m.n+" of 9, “"+m.title+"”"; el("h-due").textContent = "Due about "+fmtY(due);
-    el("fruit").innerHTML = fruitSVG(f.c)+'<span class="name">'+esc(f.name)+'</span><span class="dim">'+esc(f.dim)+'</span>';
+    el("fruit").innerHTML = fruitSVG(m.n)+'<span class="name">'+esc(f.name)+'</span><span class="dim">'+esc(f.dim)+'</span>';
     var pct = Math.max(0, Math.min(100, Math.round(days/280*100))); el("progress").style.width = pct+"%"; el("p-pct").textContent = pct+"% of the way";
     el("s-days").textContent = Math.max(0,toDue); el("s-weeks").textContent = Math.max(0, Math.ceil(toDue/7));
     el("month-title").textContent = "This month: "+m.title.toLowerCase();
@@ -1170,7 +1241,7 @@ nav.tabs button[aria-current="page"]{color:var(--rose-deep);background:var(--blu
       var start = weekStart(lmp,mm.w[0]), end = addDays(weekStart(lmp,mm.w[1]+1),-1), state = end < today ? "past" : start > today ? "" : "now";
       var pill = state==="now" ? '<span class="pill now">Now</span>' : state==="past" ? '<span class="pill past">Done</span>' : '<span class="pill">Ahead</span>';
       var mr = readsForMonth(mm.n).filter(function(r){ return r.months; });
-      return '<details id="month-'+mm.n+'"'+(state==="now"?' class="now" open':'')+'><summary><div style="width:40px;height:40px;flex:0 0 auto">'+fruitSVG(FRUIT[mm.n].c)+'</div><div class="t"><span class="eyebrow">Month '+mm.n+' · '+fmt(start)+' to '+fmt(end)+'</span><h3>'+esc(mm.title)+'</h3></div>'+pill+'<span class="chev">›</span></summary><div class="body"><div class="facets">'+facetsHTML(mm)+'</div>'+(mm.todo.length ? '<div class="facet do"><span class="eyebrow">To do</span><ul class="check" data-month="'+mm.n+'"></ul></div>' : '')+(mr.length ? '<div class="stack"><span class="eyebrow">Reads for this month</span><div class="readlist">'+mr.map(readItemHTML).join("")+'</div></div>' : '')+'</div></details>';
+      return '<details id="month-'+mm.n+'"'+(state==="now"?' class="now" open':'')+'><summary><div style="width:44px;height:44px;flex:0 0 auto">'+fruitSVG(mm.n)+'</div><div class="t"><span class="eyebrow">Month '+mm.n+' · '+fmt(start)+' to '+fmt(end)+'</span><h3>'+esc(mm.title)+'</h3></div>'+pill+'<span class="chev">›</span></summary><div class="body"><div class="facets">'+facetsHTML(mm)+'</div>'+(mm.todo.length ? '<div class="facet do"><span class="eyebrow">To do</span><ul class="check" data-month="'+mm.n+'"></ul></div>' : '')+(mr.length ? '<div class="stack"><span class="eyebrow">Reads for this month</span><div class="readlist">'+mr.map(readItemHTML).join("")+'</div></div>' : '')+'</div></details>';
     }).join("")
     + '<details id="month-birth"><summary><div class="t"><span class="eyebrow">Around '+fmt(weekStart(lmp,37))+' to '+fmt(weekStart(lmp,41))+'</span><h3>Labour and birth</h3></div><span class="pill">Ahead</span><span class="chev">›</span></summary><div class="body"><p>Real versus false labour, your job in each stage, a C-section and the emergency-birth steps are in Lesson 4. The contraction timer is under Tools.</p><button type="button" class="btn small ghost goto" data-goto="learn:labour">Open lesson 4</button></div></details>'
     + '<details id="month-home"><summary><div class="t"><span class="eyebrow">About six weeks after the birth</span><h3>The first weeks home</h3></div><span class="pill">Ahead</span><span class="chev">›</span></summary><div class="body"><p>Preparing for it is Lesson 5. Living it is Lesson 6.</p><div class="row"><button type="button" class="btn small ghost goto" data-goto="learn:prep">Lesson 5</button><button type="button" class="btn small ghost goto" data-goto="learn:home">Lesson 6</button></div></div></details>';

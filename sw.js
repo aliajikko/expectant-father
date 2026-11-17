@@ -1,4 +1,4 @@
-const CACHE = "father-v2";
+const CACHE = "father-v3";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./reads.js", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
